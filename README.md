@@ -1,2 +1,4 @@
 # AgenciaSringBoot
-Agência Bancária usando SpringBoot, API Rest, Hibernate-JPA, PostgreeSQL
+Agência Bancária usando SpringBoot, Hibernate-JPA, PostgreeSQL
+
+Projeto em andamento!
