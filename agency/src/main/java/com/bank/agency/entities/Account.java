@@ -3,6 +3,8 @@ package com.bank.agency.entities;
 import java.io.Serializable;
 import java.util.Objects;
 
+import com.bank.agency.exceptions.AmountException;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,6 +25,7 @@ public abstract class Account implements Serializable {
 	private Long id;
 	
 	private String agency;
+	private Double balance;
 	
 	@OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
 	private Holder holder;
@@ -32,6 +35,7 @@ public abstract class Account implements Serializable {
 	public Account (String agency, Holder holder) {
 		this.agency = agency;
 		this.holder = holder;
+		this.balance = 0.0;
 	}
 
 	public Long getId() {
@@ -50,12 +54,33 @@ public abstract class Account implements Serializable {
 		this.agency = agency;
 	}
 	
+	public Double getBalance() {
+		return balance;
+	}
+
+	public void setBalance(Double balance) {
+		this.balance = balance;
+	}
+
 	public Holder getHolder() {
 		return holder;
 	}
 
 	public void setHolder(Holder holder) {
 		this.holder = holder;
+	}
+	
+	public abstract void withdraw(Double amount) throws AmountException;
+
+	public abstract void deposit(Double amount) throws AmountException;
+
+	public void transfer(Double amount, Account favored) throws AmountException {
+		if (this.balance >= amount && favored != null) {
+			this.balance -= amount;
+			favored.deposit(amount);
+		} else {
+			throw new AmountException("transferencia não concluida");
+		}
 	}
 
 	@Override
